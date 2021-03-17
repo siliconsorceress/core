@@ -14,7 +14,7 @@ from homeassistant.const import (
     CONF_USERNAME,
     EVENT_HOMEASSISTANT_STOP,
 )
-from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import config_validation as cv, device_registry
 from homeassistant.helpers.typing import HomeAssistantType
 
 from .const import (
@@ -124,6 +124,14 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
     await router.setup()
 
     router.async_on_close(entry.add_update_listener(update_listener))
+
+    # Device ID was changed. Link up old device to new one.
+    dev_reg = device_registry.async_get(hass)
+    legacy_entry = dev_reg.async_get_device((DOMAIN, "AsusWRT"))
+    if legacy_entry and len(legacy_entry.identifiers) == 1:
+        dev_reg.async_update_device(
+            legacy_entry.id, new_identifiers=(DOMAIN, entry.entry_id)
+        )
 
     for platform in PLATFORMS:
         hass.async_create_task(

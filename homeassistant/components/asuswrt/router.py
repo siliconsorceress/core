@@ -370,7 +370,7 @@ class AsusWrtRouter:
     def device_info(self) -> Dict[str, Any]:
         """Return the device information."""
         return {
-            "identifiers": {(DOMAIN, "AsusWRT")},
+            "identifiers": {(DOMAIN, self._entry.entry_id)},
             "name": self._host,
             "model": "Asus Router",
             "manufacturer": "Asus",
