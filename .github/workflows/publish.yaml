@@ -22,5 +22,5 @@ jobs:
       with:
         args: |
           --all \
-          --target addon-folder \
+          #          --target addon-folder \
           --docker-hub siliconsorceress/home-assistant-core
